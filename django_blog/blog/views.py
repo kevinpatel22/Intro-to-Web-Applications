@@ -11,4 +11,4 @@ def home_page(request):
     return HttpResponse(response)
 
 def root(request):
-    return HttpResponseRedirect('home')
+    return HttpResponseRedirect('home/')

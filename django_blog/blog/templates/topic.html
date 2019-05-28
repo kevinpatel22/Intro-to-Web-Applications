@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    <main class="topic-details">
+        <h2>{{ article.title }}</h2>
+        <p>{{ article.body }}</p>
+        <p>by<strong> {{ article.author }}</strong><br></br> on <strong>{{ article.published_date }}</strong></p>
+        <a class="back" href="{% url 'home_page' %}">Back</a>
+    </main>
+{% endblock %}

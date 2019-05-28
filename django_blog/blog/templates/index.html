@@ -1,23 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My Blog</title>
-</head>
-<body>
-    <main>
-        <h1>Blog</h1>
+{% extends 'base.html' %}
+{% block content %}
+    <main class="all-articles">
         {% for article in articles %}
-            <article>
-                <h2>{{ article.title }}</h2>
-                <h3>{{ article.published_date }}</h3>
-                <p>{{ article.body }}</p>
-                <h3>{{ article.author }}</h3>
-            </article>
+            <a href="{% url 'topic_details' id=article.pk %}">
+                <article>   
+                    <h2>{{ article.title }}</h2>
+                    <h4>by {{ article.author }}</h4>
+                </article>
+            </a>
        {% endfor %}
     </main>
-
-</body>
-</html>
+{% endblock %}

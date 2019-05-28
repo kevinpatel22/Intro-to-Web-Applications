@@ -5,10 +5,16 @@ from blog.models import Article
 
 def home_page(request):
     current_date = date.today()
-    article = Article.objects.filter(draft=False).order_by('-published_date')
-    context = {'date': current_date, 'articles': article}
+    articles = Article.objects.filter(draft=False).order_by('-published_date')
+    context = {'date': current_date, 'articles': articles}
     response = render(request, 'index.html', context)
     return HttpResponse(response)
 
+def topic_show(request, id):
+    article = Article.objects.get(pk=id)
+    context = {'article': article}
+    response = render(request, 'topic.html', context)
+    return HttpResponse(response)
+
 def root(request):
-    return HttpResponseRedirect('home/')
+    return HttpResponseRedirect('home')

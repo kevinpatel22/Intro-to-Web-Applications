@@ -1,0 +1,38 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: Helvetica, sans-serif;
+  }
+
+body {
+    background-color: aqua;
+    margin: 0 10%;
+}
+
+.heading {
+    background-color: black;
+    color: white;
+    text-align: center;
+    margin: auto;
+}
+
+.all-articles {
+    display: grid;
+    border-bottom: 1px solid lightgray;
+}
+
+.all-articles a {
+    border-top: 1px solid lightgray;
+    width: 100%;
+}
+
+footer {
+    margin-top: 150px;
+    margin-bottom: 10px;
+    background-color: black;
+    color: white;
+    width: 100%;
+    text-align: center;
+}

@@ -24,4 +24,5 @@ urlpatterns = [
     path('home/', views.home_page, name = 'home_page'),
     path('admin/', admin.site.urls),
     path('articles/<int:id>', views.topic_show, name='topic_details'),
+    path('comments/new', views.create_comment, name='create_comment'),
 ]

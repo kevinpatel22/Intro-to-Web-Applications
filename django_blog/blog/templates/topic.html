@@ -4,6 +4,27 @@
         <h2>{{ article.title }}</h2>
         <p>{{ article.body }}</p>
         <p>by<strong> {{ article.author }}</strong><br></br> on <strong>{{ article.published_date }}</strong></p>
-        <a class="back" href="{% url 'home_page' %}">Back</a>
+        
+        <form action="{% url 'create_comment' %}" method="post">
+            {% csrf_token %}
+            <div class ="comment">
+                <input type="hidden" name="article" value="{{ article.pk }}">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" placeholder="e.g. John Smith" class="comment_box">
+                <label for="message">Comment</label>
+                <textarea name="message" id="message" cols="20" rows="5" placeholder="Write a comment...." class="comment_box"></textarea>
+                <button type="submit">Post</button> 
+            </div>               
+        </form>
+       
+        <h4>Comment</h4>
+        <ul>
+            {% for comment in article.comments.all %}
+                <li>
+                    <strong>Comments: </strong> <br> {{ comment.name }} <br> {{ comment.message }} <br> {{ comment.created_at }}
+                </li>
+            {% endfor %}
+        </ul>
+        <a class="back" href="{% url 'home_page' %}">Return to all Blogs</a>
     </main>
 {% endblock %}

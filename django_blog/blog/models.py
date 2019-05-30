@@ -7,8 +7,14 @@ class Article(models.Model):
     published_date = models.DateTimeField(auto_now=True)
     author = models.CharField(max_length=255)
 
-def __str__(self):
-    return f'{self.id} {self.title}'
+    def __str__(self):
+        return f'{self.id} {self.title}'
+
+class Comment(models.Model):
+    name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    message = models.TextField()
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments')
 
 
 

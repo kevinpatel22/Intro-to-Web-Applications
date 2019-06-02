@@ -1,9 +1,11 @@
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from datetime import date
 from django.views.decorators.http import require_http_methods
 from .models import Article, Comment
-from .forms import ArticleModelForm
+from .forms import ArticleModelForm, LoginForm 
 
 def home_page(request):
     current_date = date.today()
@@ -32,12 +34,51 @@ def create_comment(request):
     return redirect("topic_details", id=user_select_article)
 
 def create_blog(request):
-    form = ArticleModelForm(request.POST)
-    if form.is_valid():
-        new_blog = form.save(commit=False)
-        new_blog.save()
-        return redirect('home_page')
+    if request.method == 'POST':
+        form = ArticleModelForm(request.POST)
+        if form.is_valid():
+            new_blog = form.save(commit=False)
+            new_blog.user = request.user
+            new_blog.save()
+            return redirect('topic_details', id=new_blog.id)
     else:
         form = ArticleModelForm()
+    html_response = render(request, 'create_blog.html', {'form': form})
+    return HttpResponse(html_response)
+
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            pw = form.cleaned_data['password']
+            user = authenticate(username=username, password=pw)
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect('/home')
+            else:
+                form.add_error('username', 'Login failed')
+    else:
+        form = LoginForm()
     context = {'form': form}
-    return render(request, 'create_blog.html', context)
+    http_response = render(request, 'login.html', context)
+    return HttpResponse(http_response)
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect('/login')
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return HttpResponseRedirect('/home')
+    else:
+        form = UserCreationForm()
+    html_response = render(request, 'signup.html', {'form': form})
+    return HttpResponse(html_response)

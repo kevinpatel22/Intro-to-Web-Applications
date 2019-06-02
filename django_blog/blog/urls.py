@@ -21,9 +21,13 @@ from django.urls import path
 
 urlpatterns = [
     path('', views.root),
-    path('home/', views.home_page, name = 'home_page'),
+    path('home/', views.home_page, name ='home_page'),
     path('admin/', admin.site.urls),
     path('articles/<int:id>', views.topic_show, name='topic_details'),
     path('comments/new', views.create_comment, name='create_comment'),
     path('article/new', views.create_blog, name='create_blog'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('signup/', views.signup, name='signup'),
 ]
+

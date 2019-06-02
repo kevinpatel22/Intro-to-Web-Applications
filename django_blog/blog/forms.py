@@ -1,8 +1,8 @@
-from django import forms
+from django.forms import ModelForm, Form, CharField, PasswordInput
 from .models import Article
 from django.utils import timezone
 
-class ArticleModelForm(forms.ModelForm):
+class ArticleModelForm(ModelForm):
     class Meta:
         model = Article
         fields = {'title', 'author', 'body', 'draft'}
@@ -15,6 +15,10 @@ class ArticleModelForm(forms.ModelForm):
             raise ValidationError('Published date must be in present.')
         elif draft is False and published_date > present:
             raise ValidationError('Published date must be in past.')
+    
+class LoginForm(Form):
+    username = CharField(label="User Name", max_length=64)
+    password = CharField(widget=PasswordInput())
 
     
 

@@ -2,7 +2,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from datetime import date
 from django.views.decorators.http import require_http_methods
-from blog.models import Article, Comment
+from .models import Article, Comment
+from .forms import ArticleModelForm
 
 def home_page(request):
     current_date = date.today()
@@ -29,3 +30,14 @@ def create_comment(request):
     comment = Comment(name=user_name, article=select_article, message=user_message)
     comment.save()
     return redirect("topic_details", id=user_select_article)
+
+def create_blog(request):
+    form = ArticleModelForm(request.POST)
+    if form.is_valid():
+        new_blog = form.save(commit=False)
+        new_blog.save()
+        return redirect('home_page')
+    else:
+        form = ArticleModelForm()
+    context = {'form': form}
+    return render(request, 'create_blog.html', context)

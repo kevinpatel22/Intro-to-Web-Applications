@@ -1,11 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from datetime import date
 from django.views.decorators.http import require_http_methods
 from .models import Article, Comment
-from .forms import ArticleModelForm, LoginForm 
+from .forms import ArticleModelForm, LoginForm
 
 def home_page(request):
     current_date = date.today()
@@ -33,6 +34,7 @@ def create_comment(request):
     comment.save()
     return redirect("topic_details", id=user_select_article)
 
+@login_required
 def create_blog(request):
     if request.method == 'POST':
         form = ArticleModelForm(request.POST)
@@ -43,10 +45,12 @@ def create_blog(request):
             return redirect('topic_details', id=new_blog.id)
     else:
         form = ArticleModelForm()
-    html_response = render(request, 'create_blog.html', {'form': form})
+    html_response = render(request, 'create_article.html', {'form': form})
     return HttpResponse(html_response)
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/home')
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -81,4 +85,17 @@ def signup(request):
     else:
         form = UserCreationForm()
     html_response = render(request, 'signup.html', {'form': form})
+    return HttpResponse(html_response)
+
+@login_required
+def edit_article(request, id):
+    edit = get_object_or_404(Article, pk=id, user=request.user.pk)
+    if request.method == 'POST':
+        form = ArticleModelForm(request.POST, instance=edit)
+        if form.is_valid():
+            form.save()
+            return redirect('topic_details', id=edit.id)
+    else:
+        form = ArticleModelForm(instance=edit)
+    html_response = render(request, 'edit_article.html', {'form': form, 'edit': edit})
     return HttpResponse(html_response)

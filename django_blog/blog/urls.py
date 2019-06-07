@@ -25,9 +25,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('articles/<int:id>', views.topic_show, name='topic_details'),
     path('comments/new', views.create_comment, name='create_comment'),
-    path('article/new', views.create_blog, name='create_blog'),
+    path('article/new', views.create_blog, name='create_article'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('signup/', views.signup, name='signup'),
+    path('article/edit/<int:id>', views.edit_article, name='edit_article'),
 ]
 
